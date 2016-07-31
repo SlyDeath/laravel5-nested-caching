@@ -5,7 +5,7 @@
 Добавить пакет в composer.json:
 
 ```bash
-composer require slydeath/nested-caching-laravel5
+composer require slydeath/laravel5-nested-caching
 ```
 
 Открыть `config/app.php` и добавить сервис провайдера в массив `providers`:
