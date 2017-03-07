@@ -84,11 +84,11 @@ class NestedCachingServiceProvider extends ServiceProvider
     public function applyBladeDirectives()
     {
         Blade::directive('cache', function ($expression) {
-            return "<?php if ( ! app('SlyDeath\NestedCaching\BladeDirectives')->cache{$expression}) { ?>";
+            return "<?php if ( ! app('SlyDeath\NestedCaching\BladeDirectives')->cache({$expression}) ) { ?>";
         });
 
         Blade::directive('endcache', function () {
-            return "<?php } echo app('SlyDeath\NestedCaching\BladeDirectives')->endCache() ?>";
+            return "<?php } echo app('SlyDeath\NestedCaching\BladeDirectives')->endCache(); ?>";
         });
     }
 
