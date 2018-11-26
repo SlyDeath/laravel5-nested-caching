@@ -6,6 +6,11 @@ use Blade;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class NestedCachingServiceProvider
+ *
+ * @package SlyDeath\NestedCaching
+ */
 class NestedCachingServiceProvider extends ServiceProvider
 {
     /**
@@ -14,9 +19,10 @@ class NestedCachingServiceProvider extends ServiceProvider
      * @var array
      */
     protected $supported_drivers = [
-        'redis', 'memcached',
+        'redis',
+        'memcached',
     ];
-
+    
     /**
      * Bootstrap any application services
      *
@@ -28,17 +34,17 @@ class NestedCachingServiceProvider extends ServiceProvider
     {
         // Проверка драйвера на поддержку тэгирования кэша
         $this->checkCacheDriverSupport();
-
+        
         // Установка ПО на очистку кэша
         $this->applyMiddleware($kernel);
-
+        
         // Добавление директив в Blade
         $this->applyBladeDirectives();
-
+        
         // Публикация конфигурации
         $this->publishConfig();
     }
-
+    
     /**
      * Register any application services
      *
@@ -48,10 +54,10 @@ class NestedCachingServiceProvider extends ServiceProvider
     {
         $config_path = __DIR__ . '/../config/nested_caching.php';
         $this->mergeConfigFrom($config_path, 'nested_caching');
-
+        
         $this->app->singleton(BladeDirectives::class);
     }
-
+    
     /**
      * Проверка драйвера на поддержку тэгирования кэша
      *
@@ -59,13 +65,13 @@ class NestedCachingServiceProvider extends ServiceProvider
      */
     public function checkCacheDriverSupport()
     {
-        if (!in_array(config('cache.default'), $this->supported_drivers, true)) {
+        if ( ! in_array(config('cache.default'), $this->supported_drivers, true)) {
             throw new BadDriverException(
                 'Your cache driver does not supported. Supported drivers: ' . implode(', ', $this->supported_drivers)
             );
         }
     }
-
+    
     /**
      * Установка ПО на очистку кэша
      *
@@ -77,7 +83,7 @@ class NestedCachingServiceProvider extends ServiceProvider
             $kernel->pushMiddleware('SlyDeath\NestedCaching\FlushCacheMiddleware');
         }
     }
-
+    
     /**
      * Добавление директив в Blade
      */
@@ -86,20 +92,24 @@ class NestedCachingServiceProvider extends ServiceProvider
         Blade::directive('cache', function ($expression) {
             return "<?php if ( ! app('SlyDeath\NestedCaching\BladeDirectives')->cache({$expression}) ) { ?>";
         });
-
+        
         Blade::directive('endcache', function () {
             return "<?php } echo app('SlyDeath\NestedCaching\BladeDirectives')->endCache(); ?>";
         });
+        
+        Blade::directive('endCache', function () {
+            return "<?php } echo app('SlyDeath\NestedCaching\BladeDirectives')->endCache(); ?>";
+        });
     }
-
+    
     /**
      * Публикация конфигурации
      */
     public function publishConfig()
     {
-        $config_path = __DIR__ . '/../config/nested_caching.php';
+        $config_path  = __DIR__ . '/../config/nested_caching.php';
         $publish_path = base_path('config/nested_caching.php');
-
+        
         $this->publishes([$config_path => $publish_path], 'config');
     }
 }

@@ -4,6 +4,11 @@ namespace SlyDeath\NestedCaching;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 
+/**
+ * Class Caching
+ *
+ * @package SlyDeath\NestedCaching
+ */
 class Caching
 {
     /**
@@ -12,7 +17,7 @@ class Caching
      * @var Cache
      */
     protected $cache;
-
+    
     /**
      * @param Cache $cache
      */
@@ -20,23 +25,31 @@ class Caching
     {
         $this->cache = $cache;
     }
-
+    
     /**
      * Кэширование
      *
-     * @param $key
-     * @param $fragment
+     * @param string|object $key      Ключ кэширования
+     * @param string        $fragment Вывод
+     * @param string|null   $minutes  Время жизни кэша
      *
      * @return string
      */
-    public function put($key, $fragment)
+    public function put($key, $fragment, $minutes = null)
     {
+        if ($minutes) {
+            return $this->cache->tags(config('nested_caching.cache_tag'))
+                               ->remember($key, $minutes, function () use ($fragment) {
+                                   return $fragment;
+                               });
+        }
+        
         return $this->cache->tags(config('nested_caching.cache_tag'))
-            ->rememberForever($this->applyKey($key), function () use ($fragment) {
-                return $fragment;
-            });
+                           ->rememberForever($key, function () use ($fragment) {
+                               return $fragment;
+                           });
     }
-
+    
     /**
      * Проверка на существование ключа в списке ключей
      *
@@ -46,23 +59,6 @@ class Caching
      */
     public function has($key)
     {
-        return $this->cache->tags(config('nested_caching.cache_tag'))
-            ->has($this->applyKey($key));
-    }
-
-    /**
-     * Нормализация ключа кэширования
-     *
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function applyKey($key)
-    {
-        if (is_object($key) && method_exists($key, 'getNestedCacheKey')) {
-            return $key->getNestedCacheKey();
-        }
-
-        return $key;
+        return $this->cache->tags(config('nested_caching.cache_tag'))->has($key);
     }
 }

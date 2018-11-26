@@ -2,6 +2,11 @@
 
 namespace SlyDeath\NestedCaching;
 
+/**
+ * Class BladeDirectives
+ *
+ * @package SlyDeath\NestedCaching
+ */
 class BladeDirectives
 {
     /**
@@ -10,14 +15,21 @@ class BladeDirectives
      * @var array $keys
      */
     protected $keys = [];
-
+    
+    /**
+     * Список минут
+     *
+     * @var array $minutes
+     */
+    protected $minutes = [];
+    
     /**
      * Инстанс кэша
      *
      * @var Caching $cache
      */
     protected $cache;
-
+    
     /**
      * @param Caching $caching
      */
@@ -25,24 +37,22 @@ class BladeDirectives
     {
         $this->cache = $caching;
     }
-
+    
     /**
      * Директива @cache
      *
-     * @param             $model
-     * @param string|null $key
+     * @param string|object $key     Ключ кэширования
+     * @param string|null   $minutes Время жизни кэша
      *
      * @return bool
      */
-    public function cache($model, $key = null)
+    public function cache($key, $minutes = null)
     {
         ob_start();
-
-        return $this->cache->has(
-            $this->applyKey($model, $key)
-        );
+        
+        return $this->cache->has($this->applyData($key, $minutes));
     }
-
+    
     /**
      * Директива @endcache
      *
@@ -50,55 +60,67 @@ class BladeDirectives
      */
     public function endCache()
     {
-        return $this->cache->put(
-            $this->getKey(), ob_get_clean()
-        );
+        return $this->cache->put($this->getKey(), ob_get_clean(), $this->getMinutes());
     }
-
+    
     /**
      * Обработка ключа кэша
      *
-     * @param  object $model
-     *
-     * @param string|null $key
+     * @param string|object $key     Ключ кэширования
+     * @param string|null   $minutes Время жизни кэша
      *
      * @return string
+     *
      * @throws \Exception
      */
-    public function applyKey($model, $key = null)
+    public function applyData($key, $minutes = null)
     {
         switch (true) {
             // Обработка ключа указанного вручную
-            case(is_string($model) || is_string($key)):
-                $key = is_string($model) ? $model : $key;
+            case(is_string($key)):
+                $key = trim($key);
                 break;
+            
             // Пытаемся получить ключ модели методом getNestedCacheKey
-            case(is_object($model) && method_exists($model, 'getNestedCacheKey')):
-                $key = $model->getNestedCacheKey();
+            case(is_object($key) && method_exists($key, 'getNestedCacheKey')):
+                $key = $key->getNestedCacheKey();
                 break;
+            
             // Если это колекция, то для ключа кэша используем хэш её содержимого
-            case($model instanceof \Illuminate\Support\Collection):
-                $key = md5($model);
+            case($key instanceof \Illuminate\Support\Collection):
+                $key = sha1($key);
                 break;
+            
             default:
                 throw new NotDetermineKeyException('Could not determine an appropriate cache key');
         }
-
+        
         $this->setKey($key);
-
+        $this->setMinutes($minutes);
+        
         return $key;
     }
-
+    
     /**
      * Добаление ключа кэша в список ключей
      *
-     * @param $key
+     * @param string $key
      */
     public function setKey($key)
     {
         $this->keys[] = $key;
     }
-
+    
+    /**
+     * Добаление минут в список минут
+     *
+     * @param null|int $minutes
+     */
+    public function setMinutes($minutes)
+    {
+        $this->minutes[] = $minutes;
+    }
+    
     /**
      * Получение ключа кэша из списка ключей
      *
@@ -107,5 +129,15 @@ class BladeDirectives
     public function getKey()
     {
         return array_pop($this->keys);
+    }
+    
+    /**
+     * Получение минут из списка минут
+     *
+     * @return string
+     */
+    public function getMinutes()
+    {
+        return array_pop($this->minutes);
     }
 }

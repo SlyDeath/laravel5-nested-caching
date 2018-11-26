@@ -2,6 +2,11 @@
 
 namespace SlyDeath\NestedCaching;
 
+/**
+ * Trait NestedCacheable
+ *
+ * @package SlyDeath\NestedCaching
+ */
 trait NestedCacheable
 {
     /**
@@ -12,12 +17,13 @@ trait NestedCacheable
     public function getNestedCacheKey()
     {
         // Если нет id модели или поля updated_at то генерируется ключ из содержимого модели
-        if (!$this->id || !$this->updated_at) {
+        if ( ! $this->id || ! $this->updated_at) {
             return md5($this);
         }
-
+        
         // Иначе составляется ключ модели
         $class_name = get_class($this);
+        
         return "{$class_name}:{$this->id}:{$this->updated_at->timestamp}";
     }
 }

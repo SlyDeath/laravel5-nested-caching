@@ -1,20 +1,21 @@
 {
-    "name": "slydeath/laravel5-nested-caching",
-    "description": "Nested Caching для Laravel 5",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "SlyDeath",
-            "email": "slyrs@yandex.ru"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "illuminate/support": "^5.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "SlyDeath\\NestedCaching\\": "src/"
-        }
+  "name": "slydeath/laravel5-nested-caching",
+  "description": "Nested Caching для Laravel 5",
+  "license": "MIT",
+  "version": "2.0",
+  "authors": [
+    {
+      "name": "SlyDeath",
+      "email": "slyrs@yandex.ru"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "illuminate/support": "^5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "SlyDeath\\NestedCaching\\": "src/"
+    }
+  }
 }
