@@ -3,6 +3,9 @@
 [![Total Downloads](https://poser.pugx.org/slydeath/laravel5-nested-caching/downloads)](https://packagist.org/packages/slydeath/laravel5-nested-caching)
 [![License](https://poser.pugx.org/slydeath/laravel5-nested-caching/license)](https://packagist.org/packages/slydeath/laravel5-nested-caching)
 
+## Версии
+Версия 3.* для Laravel 5.8, для 5.6-5.7 использовать релиз 2.*
+
 ## Установка
 
 Добавить пакет в composer.json:
