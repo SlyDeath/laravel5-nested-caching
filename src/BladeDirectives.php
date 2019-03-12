@@ -45,6 +45,8 @@ class BladeDirectives
      * @param string|null   $minutes Время жизни кэша
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function cache($key, $minutes = null)
     {
@@ -118,7 +120,7 @@ class BladeDirectives
      */
     public function setMinutes($minutes)
     {
-        $this->minutes[] = $minutes;
+        $this->minutes[] = now()->addMinutes($minutes);
     }
     
     /**

@@ -1,8 +1,8 @@
 {
   "name": "slydeath/laravel5-nested-caching",
-  "description": "Nested Caching для Laravel 5",
+  "description": "Nested Caching для Laravel 5.8",
   "license": "MIT",
-  "version": "2.0",
+  "version": "3.0",
   "authors": [
     {
       "name": "SlyDeath",
@@ -11,7 +11,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "illuminate/support": "^5.2"
+    "illuminate/support": "^5.8"
   },
   "autoload": {
     "psr-4": {
