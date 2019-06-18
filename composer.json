@@ -2,7 +2,7 @@
   "name": "slydeath/laravel5-nested-caching",
   "description": "Nested Caching для Laravel 5.8",
   "license": "MIT",
-  "version": "3.0",
+  "version": "3.1",
   "authors": [
     {
       "name": "SlyDeath",

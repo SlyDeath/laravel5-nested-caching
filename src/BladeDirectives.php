@@ -120,7 +120,7 @@ class BladeDirectives
      */
     public function setMinutes($minutes)
     {
-        $this->minutes[] = now()->addMinutes($minutes);
+        $this->minutes[] = $minutes ? now()->addMinutes($minutes) : null;
     }
     
     /**
