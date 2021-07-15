@@ -1,3 +1,6 @@
+### WARNING!!!
+This package no longer maintained, please, use https://github.com/SlyDeath/laravel-nested-caching instead
+
 # Nested Caching для Laravel 5
 [![Latest Stable Version](https://poser.pugx.org/slydeath/laravel5-nested-caching/v/stable)](https://packagist.org/packages/slydeath/laravel5-nested-caching)
 [![Total Downloads](https://poser.pugx.org/slydeath/laravel5-nested-caching/downloads)](https://packagist.org/packages/slydeath/laravel5-nested-caching)
